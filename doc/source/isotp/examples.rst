@@ -8,28 +8,32 @@ Basic transmission with python-can
 
 .. code-block:: python
    
-   import isotp
-   import logging
-   import time
+	import isotp
+	import logging
+	import time
 
-   from can.interfaces.vector import VectorBus
+	from can.interfaces.vector import VectorBus
 
-   def my_error_handler(error):
-      logging.warning('IsoTp error happened : %s - %s' % (error.__class__.__name__, str(error)))
 
-   bus = VectorBus(channel=0, bitrate=500000)
-   addr = isotp.Address(isotp.AddressingMode.Normal_11bits, rxid=0x123, txid=0x456)
+	def my_error_handler(error):
+		logging.warning(
+			"IsoTp error happened : %s - %s" % (error.__class__.__name__, str(error))
+		)
 
-   stack = isotp.CanStack(bus, address=addr, error_handler=my_error_handler)
-   stack.send(b'Hello, this is a long payload sent in small chunks')
 
-   while stack.transmitting():
-      stack.process()
-      time.sleep(stack.sleep_time())
+	bus = VectorBus(channel=0, bitrate=500000)
+	addr = isotp.Address(isotp.AddressingMode.Normal_11bits, rxid=0x123, txid=0x456)
 
-   print("Payload transmission done.")
+	stack = isotp.CanStack(bus, address=addr, error_handler=my_error_handler)
+	stack.send(b"Hello, this is a long payload sent in small chunks")
 
-   bus.shutdown()
+	while stack.transmitting():
+		stack.process()
+		time.sleep(stack.sleep_time())
+
+	print("Payload transmission done.")
+
+	bus.shutdown()
 
 -----
 
